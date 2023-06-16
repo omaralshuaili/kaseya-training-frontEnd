@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+
+</head>
+
+<body class="h-100vh ">
+    <div class="right h-100vh flex">
+        <div class="welcome flex">
+            <p class="bold">Hello Again !</p>
+        <small class="light">Please log in to use the app.</small>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="login()" class="flex">
+            <div class="form-group">
+              <input formControlName="Username" type="email" id="userName">
+              <label for="userName">Email</label>
+            </div>
+          
+            <div class="form-group">
+              <input id="password" formControlName="Password" type="password" minlength="6" class="input">
+              <label for="password">Password</label>
+            </div>
+            
+            <div *ngIf="mess" class="error-div meduim flex">
+                    <fa-icon icon="exclamation"></fa-icon>
+                   
+                
+                <p>{{mess}}</p>
+            </div>
+
+            <button (click)="login()" class="primary-btn bold login-btn" >Log in</button>
+
+        </form>
+        
+    </div>
+    <div class="left h-100vh flex">
+        <img src="../../assets/photo.png" alt="">
+        <p>Manage your employees with ease</p>
+    </div>
+</body>
+
+ 
+</html>

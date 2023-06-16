@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+body {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    font-family: 'Varela Round', sans-serif;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.h-100vh {
+    height: 100vh;
+}
+.bold{
+    font-weight: 700;
+}
+
+.meduim{
+    font-weight: 500;
+}
+
+.light{
+    font-weight: 300;
+}
+
+.primary-btn{
+    color: white;
+    border: none;
+    background-color: #1d7dc7;
+}
+
+
+
+.right {
+    width: 50%;
+    border: 1px solid red;
+    padding: 2rem;
+    justify-content: center;
+    gap: 30px;
+}
+
+.right p {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.left {
+    width: 50%;
+    background-color: #0e6cb6;
+
+    padding: 2rem;
+}
+
+.left img {
+    width: 80%;
+
+}
+
+.left p {
+    font-size: 2rem;
+   
+    margin-top: 5rem;
+    color: white;
+}
+form{
+    gap: 10px;
+
+}
+.form-group {
+    position: relative;
+    width: 300px;
+}
+
+
+input{
+    border: 2px solid rgba(0,0,0,.3);
+    outline: none;
+    width: 100%;
+    height: 45px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+input:focus{
+    border-color: dodgerblue;
+}
+
+.input:invalid  {
+    border-color: rgb(241, 66, 81);
+    color: rgb(241, 66, 81);
+}
+
+.input:invalid + label{
+    color: rgb(241, 66, 81);
+}
+
+label{
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    padding: 0 5px;
+    color: rgba(0,0,0,.7);
+    transition: all .3s ease-in-out;
+}
+
+
+.isEmpty + label{
+    top: 0px;
+    background-color: white;
+    padding: 0 5px;
+    color: dodgerblue;
+    font-size: 12px;
+}
+
+.error-div{
+
+    background-color: rgb(221, 137, 137);
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: white;
+    flex-direction: row; 
+    gap: 12px;
+
+}
+
+.error-div fa-icon {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(252, 93, 93);
+    width: 25px;
+    height: 25px;
+}
+
+.error-div p {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+.login-btn{
+    width: 100%;
+    height: 45px;
+    border-radius: 4px;
+}
