@@ -6,11 +6,21 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ListingComponent } from './listing/listing.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faExclamation, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './services/jwt/jwt-interceptor.service';
+import {faTrashCan} from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 
+
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { employeesFeatureKey, reducer as employeesReducer } from './employees-store/employees.reducer';
+import { EmployeesEffects } from './employees-store/employees.effects';
+import { AppState } from './employees-store/app.state';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +32,9 @@ import { JwtInterceptor } from './services/jwt/jwt-interceptor.service';
     AppRoutingModule,
     FontAwesomeModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StoreModule.forRoot<AppState>({ [employeesFeatureKey]: employeesReducer }),
+    EffectsModule.forRoot([EmployeesEffects])
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, 
@@ -31,8 +43,8 @@ import { JwtInterceptor } from './services/jwt/jwt-interceptor.service';
   }],
   bootstrap: [AppComponent]
 })
-export class AppModule {
+export class AppModule { 
   constructor(library: FaIconLibrary) {
-    library.addIcons(faExclamation);
+    library.addIcons(faExclamation,faTrashCan,faPenToSquare,faEnvelope,faCalendarDays,faSearch);
   }
  }

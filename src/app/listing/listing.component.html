@@ -1,64 +1,75 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
-    <div class="container flex">
-        <div class="cards flex">
-            <div class="card flex">
-                <div class="top">
-                    <p class="skill">Web Design</p>
-                    
-                        <fa-icon icon="ellipsis" ></fa-icon>
-                   
-                </div>
-              
-                <p class="skill-des">dfgjasgfdjhasgdajhs ashjdgajhsgdj</p>
-                <p class="name">Omar Alshuaili</p>
 
+<body>
+    <p *ngIf="mess" class="mess" [ngClass]="{'mess-animation':mess}">{{mess}}</p>
+    <div class="container grid">
+        <div class="left">
+            <div class="search">
+                <input (keyup)="onSearchChange($event)" type="text" class="search-bar">
+
+                <fa-icon icon="search" class="search-icon" ></fa-icon>
+            </div>
+           
+        </div>
+        <div class="cards-container flex">
+
+
+            <div *ngFor="let item of employeesList" class="cards flex">
+                <div class="card flex">
+                    <div class="top flex">
+                        <div class="menu">
+                            <p (click)="showMenu(item)" class="dots">...</p>
+                            <div *ngIf="item.show" class="menu-items flex">
+                                <div class="item delete" (click)="delete(item._id)">
+                                    <p>Delete</p>
+                                    <fa-icon class="trash-icon" icon="trash-can"></fa-icon>
+                                </div>
+                                <div class="item edit">
+                                    <p>Edit</p>
+                                    <fa-icon class="edit-icon" icon="pen-to-square"></fa-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="active-top flex " [ngClass]="{'blured' : item.show}">
+                            <p class="active" [ngClass]="{'isActive': item.active}">
+                                {{item.active == true ? "Active" : "Not Active"}}
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div [ngClass]="{'blured' : item.show}" class="card-content">
+                        <div class="top-card-content">
+                            <p class="name">{{item.firstName}} {{item.lastName}}</p>
+                            <p class="age">{{item.age}}yrs</p>
+                            <hr class="solid">
+                        </div>
+                        <div class="card-content-items">
+                            <div class="email card-content-item">
+                                <fa-icon icon="envelope"></fa-icon>
+                                <p class="email">{{item.email}}</p>
+                            </div>
+
+                            <div class="email card-content-item">
+                                <fa-icon class="edit-icon" icon="calendar-days"></fa-icon>
+                                <p class="DOB">{{item.DOB | date:'yyyy-MM-dd' }} </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>    
+    </div>
 </body>
+
 </html>

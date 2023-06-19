@@ -13,4 +13,12 @@ export class EmplooyesService {
   getRecords() : Observable<[Employees]>{
     return this.http.get<[Employees]>(environment.apiUrl + "/api/Employees")
   }
+
+  deleteRecord(id:string){id
+    return this.http.delete(environment.apiUrl + "/api/Employees" , {body:
+    {
+      id:id
+    }
+    } )
+  }
 }
