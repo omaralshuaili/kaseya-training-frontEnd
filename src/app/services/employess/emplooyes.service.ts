@@ -26,4 +26,8 @@ export class EmplooyesService {
   addRecord(employee: Employees){
     return this.http.post<Employees>(environment.apiUrl + '/api/Employees', employee);
   }
+
+  updateRecord(employee: Employees): Observable<Employees> {
+    return this.http.put<Employees>(`${environment.apiUrl}/api/Employees${employee._id}`, employee);
+  }
 }

@@ -14,18 +14,19 @@ import {faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
-
-
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { employeesFeatureKey, reducer as employeesReducer } from './employees-store/employees.reducer';
 import { EmployeesEffects } from './employees-store/employees.effects';
 import { AppState } from './employees-store/app.state';
+import { DatePipe } from '@angular/common';
+import { CustomDatePipe } from './custom-date.pipe';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ListingComponent,
+    CustomDatePipe,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +42,9 @@ import { AppState } from './employees-store/app.state';
     provide: HTTP_INTERCEPTORS, 
     useClass: JwtInterceptor, 
     multi: true
-  }],
+  },
+  DatePipe
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

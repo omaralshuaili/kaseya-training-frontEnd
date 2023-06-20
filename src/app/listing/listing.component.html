@@ -25,9 +25,9 @@
             <div class="add-new-div">
                 <div class="heading" (click)="showAddNewEmployee()">
                     <p>Add New Employee</p>
-                    <p  [ngClass]="{'rotate':showNewEmployeeState}">+</p>
+                    <p [ngClass]="{'rotate':showNewEmployeeState}">+</p>
                 </div>
-                <div [ngClass]="{'showAdd':showNewEmployeeState,'hideAdd':!showNewEmployeeState }"  class="bottom-add">
+                <div [ngClass]="{'showAdd':showNewEmployeeState,'hideAdd':!showNewEmployeeState }" class="bottom-add">
                     <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()" class="flex">
 
                         <div class="row flex">
@@ -53,51 +53,54 @@
 
                             <div class="form-group">
                                 <label for="DOB">Date of birth</label>
-                                <input formControlName="DOB" id="DOB"  type="date" class="input" >
+                                <input formControlName="DOB" id="DOB" type="date" class="input">
 
                             </div>
 
                             <div class="form-group">
                                 <label for="active">Active</label>
                                 <select name="active" formControlName="activeStatus">
-                                  <option selected="selected" value="true">Active</option>
-                                  <option value="false">Not active</option>
+                                    <option selected="selected" value="true">Active</option>
+                                    <option value="false">Not active</option>
                                 </select>
-                              </div>
-                              
+                            </div>
 
-                            
+
+
                         </div>
                         <div class="form-group">
                             <label for="skills">Skills</label>
                             <div class="search skill-search">
-                                <input (blur)="skillSearchInputFocussed()" (focus)="skillSearchInputFocussed()" (keyup)="onSkillSearchChange($event)" type="text" placeholder="search for skill"
+                                <input (blur)="skillSearchInputFocussed()" (focus)="skillSearchInputFocussed()"
+                                    (keyup)="onSkillSearchChange($event)" type="text" placeholder="search for skill"
                                     class="search-bar">
-                
+
                                 <fa-icon icon="search" class="search-icon"></fa-icon>
                             </div>
-                            <div [ngClass]="{'showSkills': skillSearchInputFocussedState, 'hideSkills': !skillSearchInputFocussedState}" class="skill-search-results">
-                          
-                                                       
+                            <div [ngClass]="{'showSkills': skillSearchInputFocussedState, 'hideSkills': !skillSearchInputFocussedState}"
+                                class="skill-search-results">
+
+
                                 <div (click)="addSkill(item)" *ngFor="let item of skillList" class="skill-search-item">
 
-                                    <img data-name="{{item.skillName}}" src="../../assets/skills-photo/{{item.skillName}}.png" alt="">
+                                    <img data-name="{{item.skillName}}"
+                                        src="../../assets/skills-photo/{{item.skillName}}.png" alt="">
                                     <div class="skill">
-                                        <p >{{item.skillName}}</p>
+                                        <p>{{item.skillName}}</p>
                                         <p>{{item.skillDescription}}</p>
                                     </div>
-                                   
+
                                 </div>
                             </div>
-                          
+
                         </div>
                         <div class="form-group new-skills">
-                            <div *ngFor="let item of newEmployeeSkillList" >
+                            <div *ngFor="let item of newEmployeeSkillList">
                                 <p [attr.data-name]="item.skillName">{{item.skillName}}</p>
                             </div>
                         </div>
 
-                        <button  class="primary-btn bold login-btn" type="submit">Save</button>
+                        <button class="primary-btn bold login-btn" type="submit">Save</button>
 
                     </form>
 
@@ -110,7 +113,7 @@
         <div class="cards-container flex">
 
             <div *ngFor="let item of employeesList" class="cards flex">
-                <div class="card flex">
+                <div (click)="onEmployeeClick(item)" class="card flex">
                     <div class="top flex">
                         <div class="menu">
                             <p (click)="showMenu(item)" class="dots">...</p>
@@ -147,7 +150,8 @@
 
                             <div class="email card-content-item">
                                 <fa-icon class="edit-icon" icon="calendar-days"></fa-icon>
-                                <p class="DOB">{{item.DOB | date:'yyyy-MM-dd' }} </p>
+                                <p class="DOB">{{item.DOB | customDate}}
+                                </p>
                             </div>
 
                         </div>
@@ -158,10 +162,60 @@
             </div>
         </div>
 
+     
+  
+                <div class="employee-details flex" *ngIf="currentEmployee | async as employee">
+                    <h2>Edit Employee Details</h2>
+                    <form [formGroup]="editEmployeeForm" (ngSubmit)="updateEmployee()" class="flex">
+                
+                        <div class="row flex">
+                            <div class="form-group">
+                                <label for="editFirstName">First Name</label>
+                                <input formControlName="editFirstName" type="text" id="editFirstName" [value]="employee?.firstName">
+                            </div>
+                
+                            <div class="form-group">
+                                <label for="editLastName">Last Name</label>
+                                <input id="editLastName" formControlName="editLastName" type="text" class="input" [value]="employee?.lastName">
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label for="editEmail">Email</label>
+                            <input id="editEmail" formControlName="editEmail" type="email" class="input" [value]="employee?.email">
+                        </div>
+                        <div class="row flex">
+                
+                            <div class="form-group">
+                                <label for="editDOB">Date of birth</label>
+                                <input 
+                                formControlName="editDOB" 
+                                id="DOB" 
+                                type="date" 
+                                class="input"
+                                [value]="employee?.DOB | customDate">                            </div>
+                
+                            <div class="form-group">
+                                <label for="editActive">Active</label>
+                                <select name="editActive" formControlName="editActiveStatus" [value]="employee.active">
+                                    <option selected="selected" value="true">Active</option>
+                                    <option value="false">Not active</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSkills">Skills</label>
+                            <div class="search skill-search">
+                            </div>
+                        </div>
+                
+                        <button class="primary-btn bold login-btn" type="submit">Save</button>
+                
+                    </form>
+                </div>
+                
+            </div>
 
-
-
-    </div>
 </body>
 
 </html>

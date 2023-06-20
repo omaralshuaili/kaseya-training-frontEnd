@@ -6,12 +6,15 @@ import {
   deleteEmployee,
   loadEmployees,
   searchEmployees,
+  updateEmployee,
 } from '../employees-store/employees.action';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../employees-store/app.state';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SkillsService } from '../services/skills/skills.service';
 import { Skill } from '../interfaces/skills';
+import { DatePipe } from '@angular/common';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'app-listing',
@@ -26,12 +29,16 @@ export class ListingComponent implements OnInit {
   skillList: Skill[] = [];
   newEmployeeSkillList : Skill[]= []
   skillSearchInputFocussedState: Boolean = false;
-
+  currentEmployee = new BehaviorSubject<Employees>(null);
+  editEmployeeForm: FormGroup; 
+  formattedDOB: string;
   constructor(
     private store: Store<AppState>,
     private skillService: SkillsService,
     private renderer: Renderer2,
     private el: ElementRef,
+    private formBuilder: FormBuilder,
+    public datepipe: DatePipe
   ) {}
   addEmployeeForm = new FormGroup({
     firstName: new FormControl(''),
@@ -55,6 +62,27 @@ export class ListingComponent implements OnInit {
         this.skillList = value.data;
       },
     });
+
+    this.editEmployeeForm = this.formBuilder.group({
+      editFirstName: ['', Validators.required],
+      editLastName: ['', Validators.required],
+      editEmail: ['', [Validators.required, Validators.email]],
+      editDOB: ['', Validators.required],
+      editActiveStatus: ['', Validators.required]
+      
+    });
+
+    this.currentEmployee.subscribe(employee => {
+      if (employee) {
+        this.editEmployeeForm.setValue({
+          editFirstName: employee.firstName,
+          editLastName: employee.lastName,
+          editEmail: employee.email,
+          editDOB: this.datepipe.transform(employee.DOB, 'yyyy-MM-dd'),
+          editActiveStatus: employee.active,
+        });
+      }
+    });
   }
 
   delete(id: string) {
@@ -76,7 +104,7 @@ export class ListingComponent implements OnInit {
       lastName:this.addEmployeeForm.get("lastName").value,
       email:this.addEmployeeForm.get("email").value,
       skillLevel: this.newEmployeeSkillList.map(skill => skill._id),
-      DOB:new Date(this.addEmployeeForm.get("DOB").value),
+      DOB:this.addEmployeeForm.get("DOB").value,
       age: this.calculateAge(new Date(this.addEmployeeForm.get("DOB").value)),
       active: this.addEmployeeForm.get("activeStatus").value == "true" ? true:false,
 
@@ -138,7 +166,44 @@ export class ListingComponent implements OnInit {
   showAddNewEmployee(){
     this.showNewEmployeeState = !this.showNewEmployeeState
   }
-  
+  onEmployeeClick(employee: Employees) {
+    
+    this.currentEmployee.next({
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      active: employee.active,
+      DOB: employee.DOB,
+      email: employee.email,
+      skillLevel: employee.skillLevel,
+      age: employee.age
+    });
+
+    
+}
+
+
+
+
+
+  // Update Employee
+  updateEmployee() {
+    console.log(this.editEmployeeForm.valid)
+    if (this.editEmployeeForm.valid) {
+      const updatedEmployee: Employees = this.editEmployeeForm.value;
+      // Dispatch the action to update the employee
+      this.store.dispatch(updateEmployee({ employee: updatedEmployee }));
+    } else {
+      // Handle invalid form case
+      this.showErrorMessages();
+    }
+  }
+
+  showErrorMessages() {
+    Object.keys(this.editEmployeeForm.controls).forEach(field => { 
+      const control = this.editEmployeeForm.get(field);            
+      control.markAsTouched({ onlySelf: true }); 
+    });
+  }
 
 
  

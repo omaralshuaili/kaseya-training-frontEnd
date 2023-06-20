@@ -5,10 +5,10 @@ export interface Employees {
     show?: boolean;
     firstName : String,
     lastName : String,
-    DOB: Date,
+    DOB: string,
     email:String,
     skillLevel : String[]
     active:Boolean,
-    age:number
+    age:number,
 }
 
