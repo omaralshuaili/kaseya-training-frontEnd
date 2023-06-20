@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
 import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
 import { EmplooyesService } from '../services/employess/emplooyes.service';
-import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmployee, addEmployee } from './employees.action';
+import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmployee, addEmployee, updateEmployee } from './employees.action';
 
 @Injectable()
 export class EmployeesEffects {
@@ -40,6 +40,16 @@ export class EmployeesEffects {
     ofType(addEmployee),
     switchMap(action =>
       this.employeesService.addRecord(action.employee).pipe(
+        map(() => loadEmployees()),
+        catchError(() => EMPTY)
+      )
+    )
+  ));
+
+  updateEmployee$ = createEffect(() => this.actions$.pipe(
+    ofType(updateEmployee),
+    switchMap(action =>
+      this.employeesService.updateRecord(action.employee).pipe(
         map(() => loadEmployees()),
         catchError(() => EMPTY)
       )

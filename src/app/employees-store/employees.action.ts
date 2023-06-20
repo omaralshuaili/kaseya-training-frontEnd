@@ -7,3 +7,7 @@ export const loadEmployeesFailure = createAction('[Employee] Load Employees Fail
 export const deleteEmployee = createAction('[Employee] Delete Employee', props<{ id: string }>());
 export const searchEmployees = createAction('[Employee] Search Employees', props<{ searchText: string }>());
 export const addEmployee = createAction('[Employee] Add Employee', props<{ employee: Employees }>());
+export const updateEmployee = createAction(
+    '[Employee] Update Employee',
+    props<{ employee: Employees }>()
+  );
