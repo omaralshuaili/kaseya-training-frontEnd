@@ -8,7 +8,7 @@ import { ListingComponent } from './listing/listing.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome'
 import { faExclamation, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './services/jwt/jwt-interceptor.service';
 import {faTrashCan} from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +34,8 @@ import { AppState } from './employees-store/app.state';
     HttpClientModule,
     ReactiveFormsModule,
     StoreModule.forRoot<AppState>({ [employeesFeatureKey]: employeesReducer }),
-    EffectsModule.forRoot([EmployeesEffects])
+    EffectsModule.forRoot([EmployeesEffects]),
+    FormsModule      
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, 

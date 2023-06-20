@@ -1,7 +1,7 @@
 // employees.reducer.ts
 import { createReducer, on, Action } from '@ngrx/store';
 import { Employees } from '../interfaces/employees';
-import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmployee, searchEmployees } from './employees.action';
+import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmployee, searchEmployees, addEmployee } from './employees.action';
 
 export const employeesFeatureKey = 'employees';
 
@@ -39,6 +39,11 @@ export const employeesReducer = createReducer(
       )
     }
   }),
+  on(addEmployee, (state, action) => ({
+    ...state,
+    employees: [...state.employees, action.employee],
+    filteredEmployees: [...state.employees, action.employee]
+  })),
 );
 
 export function reducer(state: EmployeesState | undefined, action: Action) {
