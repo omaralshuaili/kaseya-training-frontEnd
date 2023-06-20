@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root'
 })
 export class EmplooyesService {
+  [x: string]: any;
 
   constructor(private http : HttpClient) { }
 
@@ -20,5 +21,9 @@ export class EmplooyesService {
       id:id
     }
     } )
+  }
+
+  addRecord(employee: Employees){
+    return this.http.post<Employees>(environment.apiUrl + '/api/Employees', employee);
   }
 }

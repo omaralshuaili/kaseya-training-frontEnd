@@ -8,18 +8,106 @@
 </head>
 
 <body>
+
+
     <p *ngIf="mess" class="mess" [ngClass]="{'mess-animation':mess}">{{mess}}</p>
     <div class="container grid">
         <div class="left">
             <div class="search">
-                <input (keyup)="onSearchChange($event)" type="text" class="search-bar">
+                <input (keyup)="onSearchChange($event)" type="text" placeholder="search for employee"
+                    class="search-bar">
 
-                <fa-icon icon="search" class="search-icon" ></fa-icon>
+                <fa-icon icon="search" class="search-icon"></fa-icon>
             </div>
-           
-        </div>
-        <div class="cards-container flex">
+            <div class="filter">
 
+            </div>
+            <div class="add-new-div">
+                <div class="heading" (click)="showAddNewEmployee()">
+                    <p>Add New Employee</p>
+                    <p  [ngClass]="{'rotate':showNewEmployeeState}">+</p>
+                </div>
+                <div [ngClass]="{'showAdd':showNewEmployeeState,'hideAdd':!showNewEmployeeState }"  class="bottom-add">
+                    <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()" class="flex">
+
+                        <div class="row flex">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+
+                                <input formControlName="firstName" type="text" id="firstName">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input id="lastName" formControlName="lastName" type="text" class="input">
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input id="email" formControlName="email" type="email" class="input">
+                        </div>
+                        <div class="row flex">
+
+                            <div class="form-group">
+                                <label for="DOB">Date of birth</label>
+                                <input formControlName="DOB" id="DOB"  type="date" class="input" >
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="active">Active</label>
+                                <select name="active" formControlName="activeStatus">
+                                  <option selected="selected" value="true">Active</option>
+                                  <option value="false">Not active</option>
+                                </select>
+                              </div>
+                              
+
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="skills">Skills</label>
+                            <div class="search skill-search">
+                                <input (blur)="skillSearchInputFocussed()" (focus)="skillSearchInputFocussed()" (keyup)="onSkillSearchChange($event)" type="text" placeholder="search for skill"
+                                    class="search-bar">
+                
+                                <fa-icon icon="search" class="search-icon"></fa-icon>
+                            </div>
+                            <div [ngClass]="{'showSkills': skillSearchInputFocussedState, 'hideSkills': !skillSearchInputFocussedState}" class="skill-search-results">
+                          
+                                                       
+                                <div (click)="addSkill(item)" *ngFor="let item of skillList" class="skill-search-item">
+
+                                    <img data-name="{{item.skillName}}" src="../../assets/skills-photo/{{item.skillName}}.png" alt="">
+                                    <div class="skill">
+                                        <p >{{item.skillName}}</p>
+                                        <p>{{item.skillDescription}}</p>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <div class="form-group new-skills">
+                            <div *ngFor="let item of newEmployeeSkillList" >
+                                <p [attr.data-name]="item.skillName">{{item.skillName}}</p>
+                            </div>
+                        </div>
+
+                        <button  class="primary-btn bold login-btn" type="submit">Save</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="cards-container flex">
 
             <div *ngFor="let item of employeesList" class="cards flex">
                 <div class="card flex">
@@ -69,6 +157,10 @@
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
 </body>
 
