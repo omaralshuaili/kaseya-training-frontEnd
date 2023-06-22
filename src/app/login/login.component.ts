@@ -25,6 +25,7 @@ export class LoginComponent {
         // Save the token to the local storage
         if (data && data.data && data.data.accessToken) {
           localStorage.setItem('accessToken', data.data.accessToken);
+          
           this.route.navigate(['/listings'])
         }
         this.mess = ''

@@ -37,7 +37,7 @@ import { CacheInterceptor } from './services/cache/cache.interceptor';
     ReactiveFormsModule,
     StoreModule.forRoot<AppState>({ [employeesFeatureKey]: employeesReducer }),
     EffectsModule.forRoot([EmployeesEffects]),
-    FormsModule      
+    FormsModule 
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, 

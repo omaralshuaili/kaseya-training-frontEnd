@@ -42,54 +42,54 @@ export class ListingComponent implements OnInit {
     public datepipe: DatePipe
   ) {}
   addEmployeeForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    DOB: new FormControl(''),
-    email: new FormControl('', [Validators.email]),
+    firstName: new FormControl('',[Validators.required]),
+    lastName: new FormControl('',[Validators.required]),
+    DOB: new FormControl('',[Validators.required]),
+    email: new FormControl('', [Validators.email,Validators.required]),
     activeStatus:new FormControl('')
   });
-
   ngOnInit(): void {
-    this.store.dispatch(loadEmployees());
-    this.store
-      .pipe(select((state) => state.employees.filteredEmployees))
-      .subscribe((employees) => {
-        this.employeesList = employees;
+
+      this.store.dispatch(loadEmployees());
+      this.store
+        .pipe(select((state) => state.employees.filteredEmployees))
+        .subscribe((employees) => {
+          this.employeesList = employees;
+        });
+  
+      this.skillService.getSkills().subscribe({
+        next: (value) => {
+          console.log(value.data);
+          this.skillList = value.data;
+        },
       });
-
-    this.skillService.getSkills().subscribe({
-      next: (value) => {
-        console.log(value.data);
-        this.skillList = value.data;
-      },
-    });
-
+  
     this.editEmployeeForm = this.formBuilder.group({
-      _id:[''],
+      _id: [''],
       editFirstName: ['', Validators.required],
       editLastName: ['', Validators.required],
       editEmail: ['', [Validators.required, Validators.email]],
       editDOB: ['', Validators.required],
       editActiveStatus: ['', Validators.required],
-      editAge:['']
-      
+      editAge: ['']
     });
-
+  
     this.currentEmployee.subscribe(employee => {
+      console.log('employee:', employee); // Check employee value
       if (employee) {
         this.editEmployeeForm.setValue({
-          _id:employee._id,
+          _id: employee._id,
           editFirstName: employee.firstName,
           editLastName: employee.lastName,
           editEmail: employee.email,
           editDOB: this.datepipe.transform(employee.DOB, 'yyyy-MM-dd'),
           editActiveStatus: employee.active,
-          editAge:this.calculateAge(employee.DOB)
+          editAge: this.calculateAge(employee.DOB)
         });
       }
     });
   }
-
+  
   delete(id: string) {
     this.store.dispatch(deleteEmployee({ id }));
   }

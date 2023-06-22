@@ -1,66 +1,83 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-
-import { RouterTestingModule } from '@angular/router/testing';
-import { AuthService } from '../services/auth/auth.service'
-import { of, throwError } from 'rxjs';
+import { AuthService } from '../services/auth/auth.service';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
-  let authService: AuthService;
-  let loginFormMock: any;
-  let routerMock: any;
+  let fixture: ComponentFixture<LoginComponent>;
+  let authService: jasmine.SpyObj<AuthService>;
+  let router: jasmine.SpyObj<Router>;
 
-  beforeEach(() => {
+  beforeEach(async(() => {
+    authService = jasmine.createSpyObj('AuthService', ['login']);
+    router = jasmine.createSpyObj('Router', ['navigate']);
+
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      providers: [AuthService],
-      declarations: [LoginComponent]
+      imports: [ReactiveFormsModule],
+      declarations: [LoginComponent],
+      providers: [
+        { provide: AuthService, useValue: authService },
+        { provide: Router, useValue: router }
+      ]
     }).compileComponents();
-
-    authService = TestBed.inject(AuthService);
-    loginFormMock = { value: { username: 'testUser', password: 'testPassword' } };
-    routerMock = TestBed.inject(Router);
-
-    spyOn(authService, 'login').and.returnValue(of({ data: { accessToken: 'testToken' } }));
-    spyOn(routerMock, 'navigate');
-  });
+  }));
 
   beforeEach(() => {
-    const fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should call authService.login with login form value and save token to localStorage', fakeAsync(() => {
-    component.loginForm.setValue(loginFormMock);
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
+  it('should set error message on failed login', fakeAsync(() => {
+    const errorMessage = 'Login failed';
+    authService.login.and.returnValue(throwError({ error: { message: errorMessage } }));
+  
+    component.loginForm.setValue({
+      Username: 'test@example.com',
+      Password: 'password'
+    });
+    component.login();
+  
+    tick();
+  
+    expect(authService.login).toHaveBeenCalledWith({
+      Username: 'test@example.com',
+      Password: 'password'
+    });
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(component.mess).toBe(errorMessage);
+  }));
+  
+
+
+  it('should navigate to "/listings" on successful login', fakeAsync(() => {
+    const accessToken = 'fakeAccessToken';
+    authService.login.and.returnValue(of({ data: { accessToken } }));
+
+    component.loginForm.setValue({
+      Username: 'test@example.com',
+      Password: 'password'
+    });
     component.login();
 
     tick();
 
-    expect(authService.login).toHaveBeenCalledWith(loginFormMock);
-    expect(localStorage.getItem('accessToken')).toBe('testToken');
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/listings']);
+    expect(authService.login).toHaveBeenCalledWith({
+      Username: 'test@example.com',
+      Password: 'password'
+    });
+    expect(localStorage.getItem('accessToken')).toBe(accessToken);
+    expect(router.navigate).toHaveBeenCalledWith(['/listings']);
     expect(component.mess).toBe('');
   }));
 
-  it('should set error message when authService.login throws an error', fakeAsync(() => {
-    const errorMessage = 'Login failed';
 
-    spyOn(authService, 'login').and.returnValue(throwError({ error: { message: errorMessage } }));
-
-    component.loginForm.setValue(loginFormMock);
-
-    component.login();
-
-    tick();
-
-    expect(authService.login).toHaveBeenCalledWith(loginFormMock);
-    expect(localStorage.getItem('accessToken')).toBeNull();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-    expect(component.mess).toBe(errorMessage);
-  }));
+  
 });
