@@ -2,6 +2,7 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { Employees } from '../interfaces/employees';
 import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmployee, searchEmployees, addEmployee } from './employees.action';
+import { Injectable } from '@angular/core';
 
 export const employeesFeatureKey = 'employees';
 
@@ -18,7 +19,6 @@ export const initialEmployeesState: EmployeesState = {
   error: null,
   searchText: '' // Initialise it as empty string
 };
-
 export const employeesReducer = createReducer(
   initialEmployeesState,
   on(loadEmployees, state => state),
