@@ -489,3 +489,24 @@ p[data-name="time-management"] {
     font-size: 10px;
     font-weight: 700;
 }
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .primary-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;  
+}
+  
+  .primary-btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }

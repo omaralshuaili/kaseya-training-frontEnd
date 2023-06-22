@@ -24,89 +24,79 @@
             </div>
             <div class="add-new-div">
                 <div class="heading" (click)="showAddNewEmployee()">
-                    <p>Add New Employee</p>
-                    <p [ngClass]="{'rotate':showNewEmployeeState}">+</p>
+                  <p>Add New Employee</p>
+                  <p [ngClass]="{'rotate':showNewEmployeeState}">+</p>
                 </div>
                 <div [ngClass]="{'showAdd':showNewEmployeeState,'hideAdd':!showNewEmployeeState }" class="bottom-add">
-                    <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()" class="flex">
-
-                        <div class="row flex">
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-
-                                <input formControlName="firstName" type="text" id="firstName">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input id="lastName" formControlName="lastName" type="text" class="input">
-
-                            </div>
+                  <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()" class="flex">
+                    <div class="row flex">
+                      <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input formControlName="firstName" type="text" id="firstName">
+                        <div *ngIf="addEmployeeForm.get('firstName').invalid && addEmployeeForm.get('firstName').touched" class="error-message">
+                          First Name is required.
                         </div>
-
-
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input id="email" formControlName="email" type="email" class="input">
+                      </div>
+                      <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" formControlName="lastName" type="text" class="input">
+                        <div *ngIf="addEmployeeForm.get('lastName').invalid && addEmployeeForm.get('lastName').touched" class="error-message">
+                          Last Name is required.
                         </div>
-                        <div class="row flex">
-
-                            <div class="form-group">
-                                <label for="DOB">Date of birth</label>
-                                <input formControlName="DOB" id="DOB" type="date" class="input">
-
-                            </div>
-
-                            <div class="form-group">
-                                <label for="active">Active</label>
-                                <select name="active" formControlName="activeStatus">
-                                    <option selected="selected" value="true">Active</option>
-                                    <option value="false">Not active</option>
-                                </select>
-                            </div>
-
-
-
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input id="email" formControlName="email" type="email" class="input">
+                      <div *ngIf="addEmployeeForm.get('email').invalid && addEmployeeForm.get('email').touched" class="error-message">
+                        Please enter a valid email address.
+                      </div>
+                    </div>
+                    <div class="row flex">
+                      <div class="form-group">
+                        <label for="DOB">Date of birth</label>
+                        <input formControlName="DOB" id="DOB" type="date" class="input" max="3000-01-01"
+                          onfocus="this.max=new Date().toISOString().split('T')[0]">
+                        <div *ngIf="addEmployeeForm.get('DOB').invalid && addEmployeeForm.get('DOB').touched" class="error-message">
+                          Date of Birth is required.
                         </div>
-                        <div class="form-group">
-                            <label for="skills">Skills</label>
-                            <div class="search skill-search">
-                                <input (blur)="skillSearchInputFocussed()" (focus)="skillSearchInputFocussed()"
-                                    (keyup)="onSkillSearchChange($event)" type="text" placeholder="search for skill"
-                                    class="search-bar">
-
-                                <fa-icon icon="search" class="search-icon"></fa-icon>
-                            </div>
-                            <div [ngClass]="{'showSkills': skillSearchInputFocussedState, 'hideSkills': !skillSearchInputFocussedState}"
-                                class="skill-search-results">
-
-
-                                <div (click)="addSkill(item)" *ngFor="let item of skillList" class="skill-search-item">
-
-                                    <img data-name="{{item.skillName}}"
-                                        src="../../assets/skills-photo/{{item.skillName}}.png" alt="">
-                                    <div class="skill">
-                                        <p>{{item.skillName}}</p>
-                                        <p>{{item.skillDescription}}</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
+                      </div>
+                      <div class="form-group">
+                        <label for="active">Active</label>
+                        <select name="active" formControlName="activeStatus">
+                          <option selected="selected" value="true">Active</option>
+                          <option value="false">Not active</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="skills">Skills</label>
+                      <div class="search skill-search">
+                        <input (blur)="skillSearchInputFocussed()" (focus)="skillSearchInputFocussed()"
+                          (keyup)="onSkillSearchChange($event)" type="text" placeholder="search for skill" class="search-bar">
+                        <fa-icon icon="search" class="search-icon"></fa-icon>
+                      </div>
+                      <div [ngClass]="{'showSkills': skillSearchInputFocussedState, 'hideSkills': !skillSearchInputFocussedState}"
+                        class="skill-search-results">
+                        <div (click)="addSkill(item)" *ngFor="let item of skillList" class="skill-search-item">
+                          <img data-name="{{item.skillName}}" src="../../assets/skills-photo/{{item.skillName}}.png" alt="">
+                          <div class="skill">
+                            <p>{{item.skillName}}</p>
+                            <p>{{item.skillDescription}}</p>
+                          </div>
                         </div>
-                        <div class="form-group new-skills">
-                            <div *ngFor="let item of newEmployeeSkillList">
-                                <p [attr.data-name]="item.skillName">{{item.skillName}}</p>
-                            </div>
-                        </div>
-
-                        <button class="primary-btn bold login-btn" type="submit">Save</button>
-
-                    </form>
-
+                      </div>
+                    </div>
+                    <div class="form-group new-skills">
+                      <div *ngFor="let item of newEmployeeSkillList">
+                        <p [attr.data-name]="item.skillName">{{item.skillName}}</p>
+                      </div>
+                    </div>
+                    <button class="primary-btn bold login-btn" type="submit" [disabled]="!addEmployeeForm.valid">Save</button>
+                  </form>
                 </div>
-
-            </div>
+              </div>
+              
         </div>
 
 
@@ -166,7 +156,7 @@
   
                 <div class="employee-details flex" *ngIf="currentEmployee | async as employee">
                     <h2>Edit Employee Details</h2>
-                    <form [formGroup]="editEmployeeForm" (ngSubmit)="updateEmployee()" class="flex">
+                    <form  [formGroup]="editEmployeeForm" (ngSubmit)="updateEmployee()" class="flex">
                 
                         <div class="row flex">
                             <div class="form-group">

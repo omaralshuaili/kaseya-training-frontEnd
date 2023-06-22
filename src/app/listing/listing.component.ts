@@ -32,6 +32,7 @@ export class ListingComponent implements OnInit {
   currentEmployee = new BehaviorSubject<Employees>(null);
   editEmployeeForm: FormGroup; 
   formattedDOB: string;
+  updatedEmployee: Employees;
   constructor(
     private store: Store<AppState>,
     private skillService: SkillsService,
@@ -64,22 +65,26 @@ export class ListingComponent implements OnInit {
     });
 
     this.editEmployeeForm = this.formBuilder.group({
+      _id:[''],
       editFirstName: ['', Validators.required],
       editLastName: ['', Validators.required],
       editEmail: ['', [Validators.required, Validators.email]],
       editDOB: ['', Validators.required],
-      editActiveStatus: ['', Validators.required]
+      editActiveStatus: ['', Validators.required],
+      editAge:['']
       
     });
 
     this.currentEmployee.subscribe(employee => {
       if (employee) {
         this.editEmployeeForm.setValue({
+          _id:employee._id,
           editFirstName: employee.firstName,
           editLastName: employee.lastName,
           editEmail: employee.email,
           editDOB: this.datepipe.transform(employee.DOB, 'yyyy-MM-dd'),
           editActiveStatus: employee.active,
+          editAge:this.calculateAge(employee.DOB)
         });
       }
     });
@@ -94,8 +99,13 @@ export class ListingComponent implements OnInit {
     this.store.dispatch(searchEmployees({ searchText }));
   }
   showMenu(item: Employees) {
-    item.show = !item.show;
+    const updatedEmployee: Employees = {
+      ...item,
+      show: !item.show
+    };
+    this.store.dispatch(updateEmployee({ employee: updatedEmployee }));
   }
+  
 
   addEmployee() {
     console.log(this.addEmployeeForm.get("DOB").value)
@@ -105,7 +115,7 @@ export class ListingComponent implements OnInit {
       email:this.addEmployeeForm.get("email").value,
       skillLevel: this.newEmployeeSkillList.map(skill => skill._id),
       DOB:this.addEmployeeForm.get("DOB").value,
-      age: this.calculateAge(new Date(this.addEmployeeForm.get("DOB").value)),
+      age: this.calculateAge(this.addEmployeeForm.get("DOB").value),
       active: this.addEmployeeForm.get("activeStatus").value == "true" ? true:false,
 
       
@@ -152,23 +162,27 @@ export class ListingComponent implements OnInit {
     this.newEmployeeSkillList.push(skill)
   }
 
-  calculateAge(dob: Date): number {
-    let today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
-    let m = today.getMonth() - dob.getMonth();
-    
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+  calculateAge(dob: string): number {
+    const today = new Date();
+    const dobDate = new Date(dob);
+  
+    let age = today.getFullYear() - dobDate.getFullYear();
+    const monthDiff = today.getMonth() - dobDate.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
       age--;
     }
-    
+  
     return age;
   }
+  
   showAddNewEmployee(){
     this.showNewEmployeeState = !this.showNewEmployeeState
   }
   onEmployeeClick(employee: Employees) {
     
     this.currentEmployee.next({
+      _id:employee._id,
       firstName: employee.firstName,
       lastName: employee.lastName,
       active: employee.active,
@@ -184,19 +198,25 @@ export class ListingComponent implements OnInit {
 
 
 
+updateEmployee() {
+  if (this.editEmployeeForm.valid) {
+    const updatedEmployee: Employees = {
+      _id: this.currentEmployee.getValue()._id,
+      firstName: this.editEmployeeForm.get('editFirstName').value,
+      lastName: this.editEmployeeForm.get('editLastName').value,
+      email: this.editEmployeeForm.get('editEmail').value,
+      DOB: this.editEmployeeForm.get('editDOB').value,
+      active: this.editEmployeeForm.get('editActiveStatus').value == 'true' ? true : false,
+      age:this.calculateAge(this.editEmployeeForm.get('editDOB').value),
+      skillLevel:this.currentEmployee.getValue().skillLevel
+    };
 
-  // Update Employee
-  updateEmployee() {
-    console.log(this.editEmployeeForm.valid)
-    if (this.editEmployeeForm.valid) {
-      const updatedEmployee: Employees = this.editEmployeeForm.value;
-      // Dispatch the action to update the employee
-      this.store.dispatch(updateEmployee({ employee: updatedEmployee }));
-    } else {
-      // Handle invalid form case
-      this.showErrorMessages();
-    }
+    this.store.dispatch(updateEmployee({ employee: updatedEmployee }));
+  } else {
+    this.showErrorMessages();
   }
+}
+
 
   showErrorMessages() {
     Object.keys(this.editEmployeeForm.controls).forEach(field => { 

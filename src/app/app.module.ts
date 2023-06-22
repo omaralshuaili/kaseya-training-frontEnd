@@ -21,6 +21,7 @@ import { EmployeesEffects } from './employees-store/employees.effects';
 import { AppState } from './employees-store/app.state';
 import { DatePipe } from '@angular/common';
 import { CustomDatePipe } from './custom-date.pipe';
+import { CacheInterceptor } from './services/cache/cache.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +44,12 @@ import { CustomDatePipe } from './custom-date.pipe';
     useClass: JwtInterceptor, 
     multi: true
   },
-  DatePipe
+  DatePipe,
+  {
+    provide: HTTP_INTERCEPTORS, 
+    useClass: CacheInterceptor, 
+    multi: true
+  }
 ],
   bootstrap: [AppComponent]
 })
