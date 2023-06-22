@@ -7,13 +7,13 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root'
 })
 export class EmplooyesService {
-  [x: string]: any;
 
   constructor(private http : HttpClient) { }
 
-  getRecords() : Observable<[Employees]>{
-    return this.http.get<[Employees]>(environment.apiUrl + "/api/Employees")
+  getRecords() : Observable<Employees[]>{
+    return this.http.get< Employees[]>(environment.apiUrl + "/api/Employees");
   }
+  
 
   deleteRecord(id:string){id
     return this.http.delete(environment.apiUrl + "/api/Employees" , {body:
@@ -28,6 +28,7 @@ export class EmplooyesService {
   }
 
   updateRecord(employee: Employees): Observable<Employees> {
-    return this.http.put<Employees>(`${environment.apiUrl}/api/Employees${employee._id}`, employee);
+    console.log(employee)
+    return this.http.put<Employees>(`${environment.apiUrl}/api/Employees/${employee._id}`, employee);
   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth/auth.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import {  Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class LoginComponent {
   mess:string = ""
-  constructor(private authService:AuthService){
+  constructor(private authService:AuthService,private route : Router){
 
   }
 
@@ -24,6 +25,7 @@ export class LoginComponent {
         // Save the token to the local storage
         if (data && data.data && data.data.accessToken) {
           localStorage.setItem('accessToken', data.data.accessToken);
+          this.route.navigate(['/listings'])
         }
         this.mess = ''
       },

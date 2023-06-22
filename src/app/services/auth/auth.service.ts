@@ -10,16 +10,36 @@ export class AuthService {
    
 
   constructor(private http: HttpClient) { }
-
-  isLoggedIn():boolean {
-    throw new Error('Method not implemented.');
+  private accessTokenKey = 'accessToken';
+  
+  isLoggedIn(): boolean {
+    if (this.getAccessToken()) {
+      return true;
+    }
+    return false;
   }
+  
 
   login(form:any){
     return this.http.post(environment.apiUrl + "/api/Authenticate/login",form)
   }
 
-  getToken(): string {
-    return localStorage.getItem('accessToken');
+
+  refreshToken(): Observable<any> {
+    // Make an HTTP request to your server's refresh token endpoint
+    return this.http.post(environment.apiUrl + "/api/Authenticate/refresh-token", {}, { withCredentials: true });
+  }
+
+  setToken(accessToken: string): void {
+    localStorage.setItem(this.accessTokenKey, accessToken);
+  }
+
+  getAccessToken(): string {
+    return localStorage.getItem(this.accessTokenKey);
+  }
+
+
+  clearTokens(): void {
+    localStorage.removeItem(this.accessTokenKey);
   }
 }

@@ -7,21 +7,19 @@ import { loadEmployees, loadEmployeesSuccess, loadEmployeesFailure, deleteEmploy
 
 @Injectable()
 export class EmployeesEffects {
-
     loadEmployees$ = createEffect(() => this.actions$.pipe(
         ofType(loadEmployees),
         mergeMap(() => this.employeesService.getRecords()
           .pipe(
-            map(employees => {
-                const updatedEmployees = employees.map(emp => ({...emp, show: false})); // Add show property to each employee
-                return loadEmployeesSuccess({ employees: updatedEmployees });
+            map(response => {
+              const updatedEmployees = response.map(emp => ({...emp, show: false})); // Add show property to each employee
+              return loadEmployeesSuccess({ employees: updatedEmployees});  
             }),
             catchError(() => EMPTY)
           ))
         )
-    );
-    
-    
+      );
+      
 
   deleteEmployee$ = createEffect(() => this.actions$.pipe(
     ofType(deleteEmployee),

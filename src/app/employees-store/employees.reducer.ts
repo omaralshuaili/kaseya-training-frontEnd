@@ -22,7 +22,10 @@ export const initialEmployeesState: EmployeesState = {
 export const employeesReducer = createReducer(
   initialEmployeesState,
   on(loadEmployees, state => state),
-  on(loadEmployeesSuccess, (state, action) => ({...state, employees: action.employees, filteredEmployees: action.employees})), // Update the filteredEmployees as well
+  on(loadEmployeesSuccess, (state, action) => {
+    console.log('Data from cache:', );  // This will print true if the data is from cache
+    return {...state, employees: action.employees, filteredEmployees: action.employees}
+  }),
   on(loadEmployeesFailure, (state, action) => ({...state, error: action.error})),
   on(deleteEmployee, (state, action) => ({
     ...state,
