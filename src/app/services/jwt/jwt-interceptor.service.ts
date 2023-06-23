@@ -2,17 +2,20 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError, switchMap } from 'rxjs/operators';
+import { tap, catchError, switchMap, retryWhen, delay, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+  private readonly maxRetryAttempts = 3;
+  private retryCount = 0;
+
   constructor(public auth: AuthService, private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // get the token from auth service
     let jwtToken = this.auth.getAccessToken();
-    console.log(jwtToken);
+
     // check if the token exists
     if (jwtToken) {
       // clone the request and add new header with JWT token
@@ -20,7 +23,7 @@ export class JwtInterceptor implements HttpInterceptor {
         setHeaders: {
           Authorization: jwtToken
         },
-        withCredentials:true
+        withCredentials: true
       });
     }
 
@@ -29,36 +32,42 @@ export class JwtInterceptor implements HttpInterceptor {
       tap((event: HttpEvent<any>) => {}),
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 401) {
+          if (err.status === 401 && this.retryCount < this.maxRetryAttempts) {
             // Access token expired, try to refresh the token
+            this.retryCount++;
+
             return this.auth.refreshToken().pipe(
               switchMap((refreshResponse: any) => {
-                console.log(refreshResponse)
                 // If token refresh is successful, update the token and retry the original request
                 this.auth.setToken(refreshResponse.data.accessToken);
-                request = request.clone({
+                const newRequest = request.clone({
                   setHeaders: {
-                    Authorization: refreshResponse.accessToken
+                    Authorization: refreshResponse.data.accessToken
                   },
-                  withCredentials:true
+                  withCredentials: true
                 });
-                return next.handle(request);
+                return next.handle(newRequest);
               }),
               catchError((refreshError: any) => {
-                // Token refresh failed, redirect to login page
-                this.router.navigate(['/']);
+                // Token refresh failed, handle the error
+                if (refreshError.status === 401) {
+                  // If token refresh also returns 401, redirect to login page and log out the user
+                  this.router.navigate(['/']);
+                }
                 return throwError(refreshError);
               })
+            ).pipe(
+              retryWhen(errors => errors.pipe(
+                take(this.maxRetryAttempts) // Maximum number of retry attempts
+              ))
             );
           } else {
-            // For non-401 errors, redirect the user and throw the error
-            this.router.navigate(['/']);
+            // For non-401 errors or exceeded retry attempts, throw the error
             return throwError(err);
           }
         }
         return throwError(err);
       })
-      
     );
   }
 }

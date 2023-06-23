@@ -91,6 +91,7 @@ export class ListingComponent implements OnInit {
   }
   
   delete(id: string) {
+    console.log(id)
     this.store.dispatch(deleteEmployee({ id }));
   }
 

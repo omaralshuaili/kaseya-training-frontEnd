@@ -106,18 +106,11 @@
                 <div (click)="onEmployeeClick(item)" class="card flex">
                     <div class="top flex">
                         <div class="menu">
-                            <p (click)="showMenu(item)" class="dots">...</p>
-                            <div *ngIf="item.show" class="menu-items flex">
                                 <div class="item delete" (click)="delete(item._id)">
-                                    <p>Delete</p>
                                     <fa-icon class="trash-icon" icon="trash-can"></fa-icon>
                                 </div>
-                                <div class="item edit">
-                                    <p>Edit</p>
-                                    <fa-icon class="edit-icon" icon="pen-to-square"></fa-icon>
-                                </div>
                             </div>
-                        </div>
+            
                         <div class="active-top flex " [ngClass]="{'blured' : item.show}">
                             <p class="active" [ngClass]="{'isActive': item.active}">
                                 {{item.active == true ? "Active" : "Not Active"}}

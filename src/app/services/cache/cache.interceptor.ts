@@ -21,15 +21,15 @@ export class CacheInterceptor implements HttpInterceptor {
     if (req.method === 'GET') {
       // Handle GET requests as before
     } else if (['POST', 'PUT', 'DELETE'].includes(req.method)) {
-      // Invalidate cache if we're making a POST, PUT, or DELETE request
-      this.cache.forEach((value, key) => {
-        console.log(value)
-        if (key.method === 'GET' && key.url === req.url) {
-          this.cache.delete(key);
-        }
-      });
-      return next.handle(req);
-    } else {
+      return next.handle(req).pipe(
+        tap(event => {
+          if (event instanceof HttpResponse) {
+            this.clearCache(); // Clear the entire cache after a mutation request
+          }
+        })
+      );
+    }
+    else {
       // Let other types of requests pass through
       return next.handle(req);
     }
@@ -71,5 +71,11 @@ export class CacheInterceptor implements HttpInterceptor {
   async getCachedResponse(key: string): Promise<any | undefined> {
     const db = await this.dbPromise;
     return await db.get('httpCache', key);
+  }
+  async clearCache(): Promise<void> {
+    const db = await this.dbPromise;
+    const tx = db.transaction('httpCache', 'readwrite');
+    await tx.objectStore('httpCache').clear();
+    await tx.oncomplete;
   }
 }
