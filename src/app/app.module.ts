@@ -6,14 +6,10 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ListingComponent } from './listing/listing.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome'
-import { faExclamation, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeftLong, faExclamation, faSearch,faTrashCan,faPenToSquare,faEnvelope,faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor } from './services/jwt/jwt-interceptor.service';
-import {faTrashCan} from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { employeesFeatureKey, reducer as employeesReducer } from './employees-store/employees.reducer';
@@ -22,12 +18,15 @@ import { AppState } from './employees-store/app.state';
 import { DatePipe } from '@angular/common';
 import { CustomDatePipe } from './custom-date.pipe';
 import { CacheInterceptor } from './services/cache/cache.interceptor';
+import { RegisterComponent } from './register/register.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ListingComponent,
     CustomDatePipe,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +54,6 @@ import { CacheInterceptor } from './services/cache/cache.interceptor';
 })
 export class AppModule { 
   constructor(library: FaIconLibrary) {
-    library.addIcons(faExclamation,faTrashCan,faPenToSquare,faEnvelope,faCalendarDays,faSearch);
+    library.addIcons(faArrowLeftLong,faExclamation,faTrashCan,faPenToSquare,faEnvelope,faCalendarDays,faSearch);
   }
  }

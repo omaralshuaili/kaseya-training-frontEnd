@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment.development';
   providedIn: 'root'
 })
 export class AuthService {
+
    
 
   constructor(private http: HttpClient) { }
@@ -20,11 +21,37 @@ export class AuthService {
   }
   
 
-  login(form:any){
-    return this.http.post(environment.apiUrl + "/api/Authenticate/login",form)
+  login(form: any) {
+    return this.http.post(environment.apiUrl + "/api/Authenticate/login", form)
+      .pipe(
+        catchError((error: any) => {
+          console.log(error);
+          throw error; // Rethrow the error to be caught by the subscriber
+        })
+      );
   }
 
+  logout() {
+    this.clearTokens()
+    return this.http.post(environment.apiUrl + "/api/Authenticate/logout" , {},{withCredentials:true}).pipe(
+      catchError((error: any) => {
+        console.log(error);
+        throw error; // Rethrow the error to be caught by the subscriber
+      })
+    );
 
+  }
+  
+
+  register(form: any) {
+    return this.http.post(environment.apiUrl + "/api/Authenticate/register", form)
+      .pipe(
+        catchError((error: any) => {
+          console.log(error);
+          throw error; // Rethrow the error to be caught by the subscriber
+        })
+      );
+  }
   refreshToken(): Observable<any> {
     // Make an HTTP request to your server's refresh token endpoint
     return this.http.post(environment.apiUrl + "/api/Authenticate/refresh-token", {}, { withCredentials: true });

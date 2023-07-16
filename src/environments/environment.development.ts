@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://localhost:8080'
+    apiUrl: 'https://backend-omar-alshuaili-kaseya-training.azurewebsites.net'
 
 };

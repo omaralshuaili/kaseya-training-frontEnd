@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <div class="left">
+                <img src="../../assets/signup.jpg">
+            </div>
+            <div class="right">
+                <div class="headings">
+                    <div class="main-heading">
+                        <h1 data-last-word="Emploify.">Welcome to </h1>
+                        <h2>Create an account to continue.</h2>
+                    </div>
+                    <h3 class="signin">Already have an account? Sign in</h3>
+                </div>
+                <div class="progress">
+                    <div class="rounded" [ngClass]="{'active' :  step > 0 }"></div>
+                    <div class="rounded" [ngClass]="{'active' :  step > 1 }"></div>
+                    <div class="rounded" [ngClass]="{'active' :  step > 2 }"></div>
+
+                </div>
+                <div class="form-div">
+                    <form [formGroup]="registerForm">
+                        <div class="form-group" *ngIf="step ==1">
+                            <label for="firstName">First name</label>
+                            <!-- <input [ngClass]="{'invalid-inputs' : firstName.value == '' && firstName.touched }" [formControl]="firstName" type="text"> -->
+                            <div class="icon-wrong">
+                                <fa-icon class="exclamation" icon="exclamation"></fa-icon>
+                            </div>
+                            <small>First name shoould not be empty !</small>
+
+                        </div>
+
+                        <div class="form-group" *ngIf="step ==1">
+                            <label for="lastName">Last name</label>
+                            <input type="text">
+
+                        </div>
+                        <div class="form-group" *ngIf="step ==2">
+                            <label for="email">Email</label>
+                            <input formControlName="email" type="email">
+                        </div>
+
+                        <div class="date-inputs" *ngIf="step ==2">
+                            <div class="form-group">
+                                <label for="email">Day</label>
+                                <input  type="number" placeholder="DD" max="2">
+
+                            </div>
+                            <div class="separator">
+                                /
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Month</label>
+                                <input type="number" placeholder="MM">
+
+                            </div>
+                            <div class="separator">
+                                /
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Year</label>
+                                <input  type="number" placeholder="YYYY">
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group" *ngIf="step ==3">
+                            <label for="lastName">Password</label>
+                            <input type="password">
+                        </div>
+                        <div class="form-group" *ngIf="step ==3">
+                            <label for="lastName">Confirm password</label>
+                            <input type="password">
+                        </div>
+
+                    </form>
+                    <form action="">
+
+                    </form>
+                    <form class="form-button">
+                        <button (click)="decreaseStep()" *ngIf="step > 1 && step <=3" class="btn back">
+                            <fa-icon icon="arrow-left-long" />
+                        </button>
+
+                        <button *ngIf="step  <3" class="btn continue" (click)="increaseStep()">Continue</button>
+                        <button *ngIf="step  == 3" class="btn continue" (click)="register()">Sign up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html> 

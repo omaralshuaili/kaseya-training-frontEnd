@@ -15,6 +15,8 @@ import { SkillsService } from '../services/skills/skills.service';
 import { Skill } from '../interfaces/skills';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { AuthService } from '../services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listing',
@@ -33,13 +35,17 @@ export class ListingComponent implements OnInit {
   editEmployeeForm: FormGroup; 
   formattedDOB: string;
   updatedEmployee: Employees;
+
+
   constructor(
     private store: Store<AppState>,
     private skillService: SkillsService,
     private renderer: Renderer2,
     private el: ElementRef,
     private formBuilder: FormBuilder,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private authService : AuthService,
+    private route : Router
   ) {}
   addEmployeeForm = new FormGroup({
     firstName: new FormControl('',[Validators.required]),
@@ -225,6 +231,15 @@ updateEmployee() {
       control.markAsTouched({ onlySelf: true }); 
     });
   }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.route.navigate(['']);
+      }
+    });
+  }
+  
 
 
  

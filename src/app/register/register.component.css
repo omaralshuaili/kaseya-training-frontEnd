@@ -130,7 +130,7 @@ label {
     width: 100%;
 }
 
-.btn:disabled {
+.btn {
     border: 1px solid rgb(201, 201, 201);
     height: 40px;
     border-radius: 2px;
@@ -140,16 +140,12 @@ label {
     font-weight: 600;
     transition: all 0.3s;
 }
-.login:enabled{
-    border: none;
-    background-color: rgb(133, 161, 197);
-    width: 100%;
-    color: rgb(255, 255, 255);
-    font-weight: 600;
-    height: 40px;
-    border-radius: 2px;
-}
 
+
+.back {
+    width: 15%;
+    color: rgba(0, 0, 0, 0.6);
+}
 
 h1::after {
     content: attr(data-last-word);
@@ -210,16 +206,4 @@ small{
 
 .invalid-inputs {
     border: 1.5px solid rgb(255, 172, 172) !important;
-}
-
-.error-div{
-    display: flex;
-    background-color:  rgb(247, 192, 192);
-    justify-content: center;
-    gap: 10px;
-    height: 40px;
-    align-items: center;
-    border-radius: 2px;
-    color:white;
-    font-size: 12px;
 }
