@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
   {path : 'listings', component:ListingComponent},
   {path:'register', component:RegisterComponent},
+  {path : 'verify',component:LoginComponent},
   {path : '' , component : LoginComponent}
 ];
 

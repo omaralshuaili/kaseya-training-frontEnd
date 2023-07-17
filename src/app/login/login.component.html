@@ -17,6 +17,7 @@
         <div class="right">
             <div class="headings">
                 <div class="main-heading">
+                    
                     <h1 data-last-word="Emploify.">Welcome to </h1>
                     <h2>Log in to continue.</h2>
                 </div>
@@ -46,12 +47,10 @@
 
                 
             </div>
-            <div *ngIf="mess" class="error-div">
-                <p>{{mess}}</p>
+            <div *ngIf="mess || verify_mess" [ngClass]="{'error-div':mess,'success-div':verify_mess}">
+                <p *ngIf="mess">{{mess}}</p>
+                <p *ngIf="verify_mess">{{verify_mess}}</p>
                 <fa-icon icon="exclamation"></fa-icon>
-
-
-              
             </div>
         </div>
         
